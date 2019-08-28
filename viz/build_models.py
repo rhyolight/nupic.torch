@@ -103,9 +103,9 @@ def create_model(learning_rate, learning_rate_gamma, momentum, step_size=1, save
 
 
 def save_model(model, state, epoch, class_name):
-    filename = "{class_name}_{state}_epoch_{epoch}.pt".format(**locals())
+    filename = "{class_name}_epoch_{epoch}_{state}.pt".format(**locals())
     print("Saving model to {}".format(filename))
-    torch.save(model, filename)
+    torch.save(model.state_dict(), filename)
 
 
 def train_epoch(model, epoch, scheduler, loader, optimizer, loss_fn):
@@ -119,7 +119,7 @@ def train_epoch(model, epoch, scheduler, loader, optimizer, loss_fn):
     save_model(model, "boosted", epoch, class_name)
 
 
-def run():
+def build_models():
     # Massage the data
     normalize = transforms.Compose(
         [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
@@ -156,4 +156,4 @@ def run():
 
 
 if __name__ == "__main__":
-    run()
+    build_models()
