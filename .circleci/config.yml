@@ -19,7 +19,7 @@
 # http://numenta.org/licenses/
 # ----------------------------------------------------------------------
 
-version: 3
+version: 2
 
 jobs:
 
@@ -129,7 +129,7 @@ jobs:
 
 
 workflows:
-  version: 3
+  version: 2
 
   validate-build-test-deploy:
     jobs:
