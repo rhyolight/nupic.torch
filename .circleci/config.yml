@@ -124,12 +124,12 @@ jobs:
           key: source-cache-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           key: pip-dist-v1-{{ arch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
+      - run: pip install twine
       - run:
           name: Deploy to PYPI
           environment:
             VERBOSE: 1
-          command: |
-            . venv/bin/activate twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+          command: twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
 workflows:
   version: 2
