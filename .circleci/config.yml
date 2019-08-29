@@ -128,7 +128,7 @@ jobs:
           name: Deploy to PYPI
           environment:
             VERBOSE: 1
-          command: twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+          command: python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
 workflows:
   version: 2
