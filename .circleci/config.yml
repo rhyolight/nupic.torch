@@ -31,7 +31,7 @@ jobs:
       - checkout
       - run: echo TAG ${CIRCLE_TAG}
       - run: echo BRANCH ${CIRCLE_BRANCH}
-      - run: cat nupic.torch.__init__.py
+      - run: cat nupic/torch/__init__.py
       - run:
           name: Validate contributor license
           command: ci/validate-contributor.sh
