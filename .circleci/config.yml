@@ -111,9 +111,9 @@ jobs:
       - store_artifacts:
           path: dist
       - save_cache:
-          key: pip-dist-v1-{{ arch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
+          key: pip-dist-v1-{{ arch }}
           paths:
-            - dist
+            - ~/nupic.torch/dist
 
   deploy:
     working_directory: ~/nupic.torch
@@ -138,20 +138,21 @@ workflows:
 
   validate-build-test-deploy:
     jobs:
-      - validate_contributor
-      - install_dependencies:
-          requires:
-            - validate_contributor
-      - check_style:
-          requires:
-            - install_dependencies
-      - test:
-          requires:
-            - install_dependencies
+      # - validate_contributor
+      # - install_dependencies:
+      #     requires:
+      #       - validate_contributor
+      # - check_style:
+      #     requires:
+      #       - install_dependencies
+      # - test:
+      #     requires:
+      #       - install_dependencies
       - build:
           requires:
-            - check_style
-            - test
+            - install_dependencies
+            # - check_style
+            # - test
       - deploy:
           requires:
             - build
