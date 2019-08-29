@@ -139,7 +139,7 @@ workflows:
   validate-build-test-deploy:
     jobs:
       # - validate_contributor
-      # - install_dependencies:
+      - install_dependencies:
       #     requires:
       #       - validate_contributor
       # - check_style:
