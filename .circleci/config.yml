@@ -41,6 +41,7 @@ jobs:
 
   install_dependencies:
     working_directory: ~/nupic.torch
+    machine: true
     docker:
       - image: circleci/python:3.6
     steps:
