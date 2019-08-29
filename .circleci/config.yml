@@ -29,6 +29,9 @@ jobs:
       - restore_cache:
           key: source-cache-{{ .Environment.CIRCLE_SHA1 }}
       - checkout
+      - run: echo TAG ${CIRCLE_TAG}
+      - run: echo BRANCH ${CIRCLE_BRANCH}
+      - run: cat nupic.torch.__init__.py
       - run:
           name: Validate contributor license
           command: ci/validate-contributor.sh
@@ -46,7 +49,6 @@ jobs:
           key: source-cache-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           key: pip-cache-v1-{{ arch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
-      - run: echo GIT TAG ${CIRCLE_TAG}
       - run: pip install --user flake8-formatter-junit-xml
       - run: pip install --user -r requirements-dev.txt -r requirements.txt
       - run: python setup.py install --user
