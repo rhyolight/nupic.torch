@@ -111,9 +111,9 @@ jobs:
       - store_artifacts:
           path: dist
       - save_cache:
-          key: pip-dist-v1-{{ arch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
+          key: pip-dist-v1-{{ arch }}
           paths:
-            - dist
+            - ~/nupic.torch/dist
 
   deploy:
     working_directory: ~/nupic.torch
@@ -125,7 +125,6 @@ jobs:
       - restore_cache:
           key: pip-dist-v1-{{ arch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
       - run: ls
-      - run: ls dist
       - run: pip install twine --user
       - run:
           name: Deploy to PYPI
