@@ -108,6 +108,10 @@ jobs:
           command: python setup.py bdist_wheel
       - store_artifacts:
           path: dist
+      - save_cache:
+          key: pip-dist-v1-{{ arch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
+          paths:
+            - ~/dist
 
   deploy:
     working_directory: ~/nupic.torch
@@ -117,14 +121,12 @@ jobs:
       - restore_cache:
           key: source-cache-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
-          key: pip-cache-v1-{{ arch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
+          key: pip-dist-v1-{{ arch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
       - run:
           name: Deploy to PYPI
           environment:
             VERBOSE: 1
           command: twine upload --repository-url https://test.pypi.org/legacy/ dist/*
-      - store_artifacts:
-          path: dist
 
 workflows:
   version: 2
