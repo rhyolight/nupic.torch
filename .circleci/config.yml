@@ -31,9 +31,9 @@ jobs:
       - checkout
       - run: echo TAG ${CIRCLE_TAG}
       - run: echo BRANCH ${CIRCLE_BRANCH}
-      - run:
-          name: Validate contributor license
-          command: ci/validate-contributor.sh
+      # - run:
+      #     name: Validate contributor license
+      #     command: ci/validate-contributor.sh
       - save_cache:
           key: source-cache-{{ .Environment.CIRCLE_SHA1 }}
           paths:
@@ -41,21 +41,16 @@ jobs:
 
   install_dependencies:
     working_directory: ~/nupic.torch
-    machine: true
     docker:
       - image: circleci/python:3.6
     steps:
       - restore_cache:
           key: source-cache-{{ .Environment.CIRCLE_SHA1 }}
-      # - restore_cache:
-      #     key: pip-cache-v1-{{ arch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
+      - restore_cache:
+          key: pip-cache-v1-{{ arch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
       - run: pip install --user flake8-formatter-junit-xml
       - run: pip install --user -r requirements-dev.txt -r requirements.txt
       - run: python setup.py install --user
-      - save_cache:
-          key: source-cache-{{ .Environment.CIRCLE_SHA1 }}
-          paths:
-            - ~/nupic.torch
       - save_cache:
           key: pip-cache-v1-{{ arch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
           paths:
@@ -116,9 +111,9 @@ jobs:
       - store_artifacts:
           path: dist
       - save_cache:
-          key: pip-dist-v1-{{ arch }}
+          key: pip-dist-v1-{{ arch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
           paths:
-            - ~/nupic.torch/dist
+            - dist
 
   deploy:
     working_directory: ~/nupic.torch
@@ -143,21 +138,20 @@ workflows:
 
   validate-build-test-deploy:
     jobs:
-      # - validate_contributor
-      - install_dependencies
-      #     requires:
-      #       - validate_contributor
+      - validate_contributor
+      - install_dependencies:
+          requires:
+            - validate_contributor
       # - check_style:
       #     requires:
       #       - install_dependencies
-      # - test:
-      #     requires:
-      #       - install_dependencies
-      - build:
+      - test:
           requires:
             - install_dependencies
+      - build:
+          requires:
             # - check_style
-            # - test
+            - test
       - deploy:
           requires:
             - build
