@@ -84,3 +84,6 @@ flake8-quotes
 librosa
 requests
 tqdm
+
+# Twine is used to deploy to pypi
+twine

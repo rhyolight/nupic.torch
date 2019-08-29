@@ -109,9 +109,27 @@ jobs:
       - store_artifacts:
           path: dist
 
+  deploy:
+    working_directory: ~/nupic.torch
+    docker:
+      - image: circleci/python:3.6
+    steps:
+      - restore_cache:
+          key: source-cache-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          key: pip-cache-v1-{{ arch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
+      - run:
+          name: Deploy to PYPI
+          environment:
+            VERBOSE: 1
+          command: twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+      - store_artifacts:
+          path: dist
+    
+
 
 workflows:
-  version: 2
+  version: 3
 
   validate-build-test:
     jobs:
@@ -129,3 +147,11 @@ workflows:
           requires:
             - check_style
             - test
+      - deploy:
+        requires:
+          - build
+        filters:
+          tags:
+            only: /[0-9]+(\.[0-9]+)*/
+          branches:
+            ignore: /.*/
