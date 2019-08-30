@@ -29,12 +29,11 @@ jobs:
       - restore_cache:
           key: source-cache-{{ .Environment.CIRCLE_SHA1 }}
       - checkout
-      - run: env
       - run: echo TAG ${CIRCLE_TAG}
       - run: echo BRANCH ${CIRCLE_BRANCH}
-      # - run:
-      #     name: Validate contributor license
-      #     command: ci/validate-contributor.sh
+      - run:
+          name: Validate contributor license
+          command: ci/validate-contributor.sh
       - save_cache:
           key: source-cache-{{ .Environment.CIRCLE_SHA1 }}
           paths:
@@ -125,12 +124,13 @@ jobs:
           key: source-cache-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           key: pip-dist-v1-{{ arch }}
-      - run: pip install twine --user
-      - run:
-          name: Deploy to PYPI
-          environment:
-            VERBOSE: 1
-          command: python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+      - run:  pip install twine --user
+      - run: echo "DEPLOY TIME"
+      # - run:
+      #     name: Deploy to PYPI
+      #     environment:
+      #       VERBOSE: 1
+      #     command: python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
 workflows:
   version: 2
