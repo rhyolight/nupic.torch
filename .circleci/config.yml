@@ -126,7 +126,7 @@ jobs:
       # Working around missing CIRCLE_TAG environment variable.
       - run: CIRCLE_TAG=`git describe --tags --abbrev=0`
       - when: 
-        condition: "[[ \"$CIRCLE_TAG\" =~ [0-9]+(\.[0-9]+)* ]]"
+        condition: [[ \"$CIRCLE_TAG\" =~ [0-9]+(\.[0-9]+)* ]]
         steps:
           - run:
               name: Deploy to PYPI
