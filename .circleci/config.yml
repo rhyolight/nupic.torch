@@ -135,7 +135,7 @@ workflows:
 
   validate-build-test-deploy:
     jobs:
-      - validate_contributor
+      - validate_contributor:
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/
