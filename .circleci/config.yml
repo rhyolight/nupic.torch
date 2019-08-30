@@ -29,9 +29,6 @@ jobs:
       - restore_cache:
           key: source-cache-{{ .Environment.CIRCLE_SHA1 }}
       - checkout
-      - run: echo BRANCH ${CIRCLE_BRANCH}
-      - run: echo TAG ${CIRCLE_TAG}
-      - run: git describe --tags --abbrev=0
       - run:
           name: Validate contributor license
           command: ci/validate-contributor.sh
@@ -139,19 +136,34 @@ workflows:
   validate-build-test-deploy:
     jobs:
       - validate_contributor
+          filters:
+            tags:
+              only: /[0-9]+(\.[0-9]+)*/
       - install_dependencies:
           requires:
             - validate_contributor
+          filters:
+            tags:
+              only: /[0-9]+(\.[0-9]+)*/
       - check_style:
           requires:
             - install_dependencies
+          filters:
+            tags:
+              only: /[0-9]+(\.[0-9]+)*/
       - test:
           requires:
             - install_dependencies
+          filters:
+            tags:
+              only: /[0-9]+(\.[0-9]+)*/
       - build:
           requires:
             - check_style
             - test
+          filters:
+            tags:
+              only: /[0-9]+(\.[0-9]+)*/
       - deploy:
           requires:
             - build
