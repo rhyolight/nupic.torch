@@ -127,12 +127,13 @@ jobs:
       - run: pwd
       - run: ls ..
       - run: ls
+      - run: ls dist
       - run: pip install twine --user
       - run:
           name: Deploy to PYPI
           environment:
             VERBOSE: 1
-          command: python -m twine upload --repository-url https://test.pypi.org/legacy/ ../dist/*
+          command: python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
 workflows:
   version: 2
