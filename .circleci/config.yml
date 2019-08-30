@@ -123,7 +123,7 @@ jobs:
       - restore_cache:
           key: source-cache-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
-          key: pip-dist-v1-{{ arch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
+          key: pip-dist-v1-{{ arch }}
       - run: ls
       - run: pip install twine --user
       - run:
