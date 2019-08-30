@@ -116,7 +116,7 @@ jobs:
             - ~/nupic.torch/dist
 
   deploy:
-    working_directory: ~
+    working_directory: ~/nupic.torch
     docker:
       - image: circleci/python:3.6
     steps:
@@ -130,7 +130,7 @@ jobs:
           name: Deploy to PYPI
           environment:
             VERBOSE: 1
-          command: python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+          command: python -m twine upload --repository-url https://test.pypi.org/legacy/ ../dist/*
 
 workflows:
   version: 2
