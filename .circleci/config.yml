@@ -29,6 +29,7 @@ jobs:
       - restore_cache:
           key: source-cache-{{ .Environment.CIRCLE_SHA1 }}
       - checkout
+      - run: env
       - run: echo TAG ${CIRCLE_TAG}
       - run: echo BRANCH ${CIRCLE_BRANCH}
       # - run:
