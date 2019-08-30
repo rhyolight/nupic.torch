@@ -116,7 +116,7 @@ jobs:
             - ~/nupic.torch/dist
 
   deploy:
-    working_directory: ~/nupic.torch
+    working_directory: ~
     docker:
       - image: circleci/python:3.6
     steps:
