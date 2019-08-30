@@ -29,8 +29,9 @@ jobs:
       - restore_cache:
           key: source-cache-{{ .Environment.CIRCLE_SHA1 }}
       - checkout
-      - run: echo TAG ${CIRCLE_TAG}
       - run: echo BRANCH ${CIRCLE_BRANCH}
+      - run: echo TAG ${CIRCLE_TAG}
+      - run: git describe --tags --abbrev=0
       - run:
           name: Validate contributor license
           command: ci/validate-contributor.sh
