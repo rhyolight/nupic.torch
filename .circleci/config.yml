@@ -138,32 +138,32 @@ workflows:
       - validate_contributor:
           filters:
             tags:
-              only: /[0-9]+(\.[0-9]+)*/
+              only: /.*/
       - install_dependencies:
           requires:
             - validate_contributor
           filters:
             tags:
-              only: /[0-9]+(\.[0-9]+)*/
+              only: /.*/
       - check_style:
           requires:
             - install_dependencies
           filters:
             tags:
-              only: /[0-9]+(\.[0-9]+)*/
+              only: /.*/
       - test:
           requires:
             - install_dependencies
           filters:
             tags:
-              only: /[0-9]+(\.[0-9]+)*/
+              only: /.*/
       - build:
           requires:
             - check_style
             - test
           filters:
             tags:
-              only: /[0-9]+(\.[0-9]+)*/
+              only: /.*/
       - deploy:
           requires:
             - build
