@@ -22,7 +22,8 @@ version: 2
 jobs:
   validate_contributor:
     working_directory: ~/nupic.torch
-    machine: true
+    machine: 
+      image: circleci/classic:latest
     steps:
       - restore_cache:
           key: source-cache-{{ .Environment.CIRCLE_SHA1 }}
@@ -101,7 +102,7 @@ jobs:
       - run:
           name: Build wheel
           environment:
-            VERBOSE: 1
+            VERBOSE: "1"
           command: python setup.py bdist_wheel
       - run: ls dist
       - store_artifacts:
@@ -124,7 +125,7 @@ jobs:
       # Working around missing CIRCLE_TAG environment variable.
       - run: CIRCLE_TAG=`git describe --tags --abbrev=0`
       - when: 
-        - condition: "[[ \"$CIRCLE_TAG\" =~ [0-9]+(\.[0-9]+)* ]]"
+        - condition: \[\[ "$CIRCLE_TAG" =~ [0-9]+(\.[0-9]+)* \]\]
         - steps:
             - run:
                 name: Deploy to PYPI
