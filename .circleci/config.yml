@@ -23,7 +23,7 @@ jobs:
   validate_contributor:
     working_directory: ~/nupic.torch
     machine: 
-      image: circleci/python:3.6
+      image: circleci/classic:latest
     steps:
       - checkout
       - run:
