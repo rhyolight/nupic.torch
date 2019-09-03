@@ -27,6 +27,7 @@ jobs:
       image: circleci/classic:latest
     steps:
       - checkout
+      - run: git tag -l --points-at HEAD
       - run: export CIRCLE_TAG=$(git tag -l --points-at HEAD)
       - run: echo CIRCLE_TAG is $CIRCLE_TAG
       - run:
