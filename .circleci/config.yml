@@ -20,6 +20,7 @@
 version: 2
 
 jobs:
+
   validate_contributor:
     working_directory: ~/nupic.torch
     machine: 
@@ -39,6 +40,11 @@ jobs:
       - run: pip install --user flake8-formatter-junit-xml
       - run: pip install --user -r requirements-dev.txt -r requirements.txt
       - run: python setup.py install --user
+    save_cache:
+      key: pip-cache-v1-{{ arch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
+      paths:
+        - ~/.local
+        - ~/.cache
 
   check_style:
     working_directory: ~/nupic.torch
@@ -46,6 +52,9 @@ jobs:
       - image: circleci/python:3.6
     steps:
       - checkout
+      - restore_cache: 
+          keys: 
+            - pip-cache-v1-{{ arch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
       - run:
           name: Check Style
           command: |
@@ -75,14 +84,11 @@ jobs:
     docker:
       - image: circleci/python:3.6
     steps:
-      - checkout
-      - run: echo current tag is $CIRCLE_TAG
       - run:
           name: Build wheel
           environment:
             VERBOSE: "1"
           command: python setup.py bdist_wheel
-      - run: ls dist
       - store_artifacts:
           path: dist
       - save_cache:
