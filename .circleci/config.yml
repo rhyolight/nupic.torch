@@ -37,6 +37,7 @@ jobs:
       - image: circleci/python:3.6
     steps:
       - checkout
+      - run: echo CIRCLE_TAG is $CIRCLE_TAG
       - run: pip install --user flake8-formatter-junit-xml
       - run: pip install --user -r requirements-dev.txt -r requirements.txt
       - run: python setup.py install --user
@@ -52,6 +53,7 @@ jobs:
       - image: circleci/python:3.6
     steps:
       - checkout
+      - run: echo CIRCLE_TAG is $CIRCLE_TAG
       - restore_cache: 
           keys: 
             - pip-cache-v1-{{ arch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
@@ -69,6 +71,7 @@ jobs:
       - image: circleci/python:3.6
     steps:
       - checkout
+      - run: echo CIRCLE_TAG is $CIRCLE_TAG
       - run:
           name: Run python tests
           environment:
@@ -85,6 +88,7 @@ jobs:
       - image: circleci/python:3.6
     steps:
       - checkout
+      - run: echo CIRCLE_TAG is $CIRCLE_TAG
       - run:
           name: Build wheel
           environment:
@@ -105,19 +109,44 @@ jobs:
     # when: 
     #   - condition: \[\[ `git describe --tags --abbrev=0 --exact-match` =~ [0-9]+(\.[0-9]+)* \]\]
     steps:
-      - checkout
-      - run: CIRCLE_TAG="$(git tag -l --points-at HEAD)"
-      - when:
-          condition:  \[\[ $CIRCLE_TAG =~ [0-9]+(\.[0-9]+)* \]\]
-          steps:
-            - restore_cache:
-                key: pip-dist-v1-{{ arch }}-{{ checksum "nupic/torch/__init__.py" }}
-            - run: pip install twine --user
-            - run:
-                name: Deploy to PYPI
-                environment:
-                  VERBOSE: "1"
-                command: python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+      - run: echo CIRCLE_TAG is $CIRCLE_TAG
+      - restore_cache:
+          key: pip-dist-v1-{{ arch }}-{{ checksum "nupic/torch/__init__.py" }}
+      - run: pip install twine --user
+      - run:
+          name: Deploy to PYPI
+          environment:
+            VERBOSE: "1"
+          command: python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+      # - checkout
+      # - run: CIRCLE_TAG="$(git tag -l --points-at HEAD)"
+      # - run:
+      #     name: deploy to pypi
+      #     command: |
+      #       echo $CIRCLE_TAG
+      # - when:
+      #     condition:  \[\[ $CIRCLE_TAG =~ [0-9]+(\.[0-9]+)* \]\]
+      #     steps:
+      #       - restore_cache:
+      #           key: pip-dist-v1-{{ arch }}-{{ checksum "nupic/torch/__init__.py" }}
+      #       - run: pip install twine --user
+      #       - run:
+      #           name: Deploy to PYPI
+      #           environment:
+      #             VERBOSE: "1"
+      #           command: python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+
+    # steps:
+    #   - run: echo "preinstall is << parameters.preinstall-foo >>"
+    #   - when:
+    #       condition: << parameters.preinstall-foo >>
+    #       steps:
+    #         - run: echo "preinstall"
+    #   - unless:
+    #       condition: << parameters.preinstall-foo >>
+    #       steps:
+    #         - run: echo "don't preinstall"
+
 
 workflows:
   version: 2
