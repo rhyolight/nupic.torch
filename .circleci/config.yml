@@ -27,6 +27,8 @@ jobs:
       image: circleci/classic:latest
     steps:
       - checkout
+      - run: export CIRCLE_TAG=$(git tag -l --points-at HEAD)
+      - run: echo CIRCLE_TAG is $CIRCLE_TAG
       - run:
           name: Validate contributor license
           command: ci/validate-contributor.sh
