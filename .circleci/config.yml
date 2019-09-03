@@ -116,16 +116,15 @@ jobs:
     working_directory: ~/nupic.torch
     docker:
       - image: circleci/python:3.6
+    # Working around missing CIRCLE_TAG environment variable.
     when: 
-      - condition: \[\[ "$CIRCLE_TAG" =~ [0-9]+(\.[0-9]+)* \]\]
+      - condition: \[\[ `git describe --tags --abbrev=0` =~ [0-9]+(\.[0-9]+)* \]\]
     steps:
       - restore_cache:
           key: source-cache-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
           key: pip-dist-v1-{{ arch }}
       - run: pip install twine --user
-      # Working around missing CIRCLE_TAG environment variable.
-      - run: CIRCLE_TAG=`git describe --tags --abbrev=0`
       - run:
           name: Deploy to PYPI
           environment:
