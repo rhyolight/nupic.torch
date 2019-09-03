@@ -120,6 +120,7 @@ jobs:
     when: 
       - condition: \[\[ `git describe --tags --abbrev=0` =~ [0-9]+(\.[0-9]+)* \]\]
     steps:
+      - run: git describe --tags --abbrev=0
       - restore_cache:
           key: source-cache-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
