@@ -122,7 +122,7 @@ jobs:
     steps:
       - restore_cache:
           key: source-cache-{{ .Environment.CIRCLE_SHA1 }}
-      - run: git describe --tags --abbrev=0 --exact-match
+      # - run: git describe --tags --abbrev=0 --exact-match
       - restore_cache:
           key: pip-dist-v1-{{ arch }}-{{ arch }}-{{ checksum "nupic/torch/__init__.py" }}
       - run: pip install twine --user
