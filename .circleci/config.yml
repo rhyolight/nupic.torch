@@ -108,7 +108,7 @@ jobs:
       - store_artifacts:
           path: dist
       - save_cache:
-          key: pip-dist-v1-{{ arch }}
+          key: pip-dist-v1-{{ arch }}-{{ arch }}-{{ checksum "nupic/torch/__init__.py" }}
           paths:
             - ~/nupic.torch/dist
 
@@ -124,12 +124,12 @@ jobs:
           key: source-cache-{{ .Environment.CIRCLE_SHA1 }}
       - run: git describe --tags --abbrev=0
       - restore_cache:
-          key: pip-dist-v1-{{ arch }}
+          key: pip-dist-v1-{{ arch }}-{{ arch }}-{{ checksum "nupic/torch/__init__.py" }}
       - run: pip install twine --user
       - run:
           name: Deploy to PYPI
           environment:
-            VERBOSE: 1
+            VERBOSE: "1"
           command: python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
 workflows:
