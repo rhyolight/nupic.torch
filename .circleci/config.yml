@@ -23,7 +23,7 @@ jobs:
   validate_contributor:
     working_directory: ~/nupic.torch
     machine: 
-      image: circleci/classic:latest
+      image: circleci/python:3.6
     steps:
       - checkout
       - run:
@@ -36,13 +36,9 @@ jobs:
       - image: circleci/python:3.6
     steps:
       - checkout
-      - restore_cache:
-          key: pip-cache-v1-{{ arch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
       - run: pip install --user flake8-formatter-junit-xml
       - run: pip install --user -r requirements-dev.txt -r requirements.txt
       - run: python setup.py install --user
-      - save_cache:
-          key: pip-cache-v1-{{ arch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
           paths:
             - ~/.local
             - ~/.cache
@@ -53,8 +49,6 @@ jobs:
       - image: circleci/python:3.6
     steps:
       - checkout
-      - restore_cache:
-          key: pip-cache-v1-{{ arch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
       - run:
           name: Check Style
           command: |
@@ -69,8 +63,6 @@ jobs:
       - image: circleci/python:3.6
     steps:
       - checkout
-      - restore_cache:
-          key: pip-cache-v1-{{ arch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
       - run:
           name: Run python tests
           environment:
@@ -88,8 +80,6 @@ jobs:
     steps:
       - checkout
       - run: echo current tag is $CIRCLE_TAG
-      - restore_cache:
-          key: pip-cache-v1-{{ arch }}-{{ checksum "requirements.txt" }}-{{ checksum "requirements-dev.txt" }}
       - run:
           name: Build wheel
           environment:
@@ -99,7 +89,7 @@ jobs:
       - store_artifacts:
           path: dist
       - save_cache:
-          key: pip-dist-v1-{{ arch }}-{{ arch }}-{{ checksum "nupic/torch/__init__.py" }}
+          key: pip-dist-v1-{{ arch }}-{{ checksum "nupic/torch/__init__.py" }}
           paths:
             - ~/nupic.torch/dist
 
@@ -113,7 +103,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: pip-dist-v1-{{ arch }}-{{ arch }}-{{ checksum "nupic/torch/__init__.py" }}
+          key: pip-dist-v1-{{ arch }}-{{ checksum "nupic/torch/__init__.py" }}
       - run: pip install twine --user
       - run:
           name: Deploy to PYPI
