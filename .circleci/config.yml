@@ -95,6 +95,7 @@ jobs:
     docker:
       - image: circleci/python:3.6
     steps:
+      - run: echo current tag is $CIRCLE_TAG
       - restore_cache:
           key: source-cache-{{ .Environment.CIRCLE_SHA1 }}
       - restore_cache:
@@ -117,12 +118,11 @@ jobs:
     docker:
       - image: circleci/python:3.6
     # Working around missing CIRCLE_TAG environment variable.
-    when: 
-      - condition: \[\[ `git describe --tags --abbrev=0 --exact-match` =~ [0-9]+(\.[0-9]+)* \]\]
+    # when: 
+    #   - condition: \[\[ `git describe --tags --abbrev=0 --exact-match` =~ [0-9]+(\.[0-9]+)* \]\]
     steps:
       - restore_cache:
           key: source-cache-{{ .Environment.CIRCLE_SHA1 }}
-      # - run: git describe --tags --abbrev=0 --exact-match
       - restore_cache:
           key: pip-dist-v1-{{ arch }}-{{ arch }}-{{ checksum "nupic/torch/__init__.py" }}
       - run: pip install twine --user
@@ -154,3 +154,6 @@ workflows:
       - deploy:
           requires:
             - build
+          filters:
+            tags:
+              only: /[0-9]+(\.[0-9]+)*/
